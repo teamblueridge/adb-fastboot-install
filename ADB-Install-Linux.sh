@@ -28,5 +28,7 @@ echo "Fastboot moved to /usr/bin/fastboot"
 echo "Installing rules"
 sudo cp Linux/51-android.rules /etc/udev/rules.d/51-android.rules #Installs rules
 echo "Rules installed"
+echo "Ubuntu Specific. If there is an error, don't worry. Please input password when prompted."
+sudo service udev restart
 echo "You may now run Android Debug Bridge and Fastboot commands"
 echo "Have a nice day."
