@@ -20,8 +20,13 @@ echo "Changed directory to `pwd`" #Informs user of path change
 echo "Moving ADB"
 sudo cp Mac/adb_Mac $install_path/adb #Moves adb
 echo "ADB Moved to $install_path/adb"
-echo "moving Fastboot"
+echo "Setting execute permission on adb"
+sudo chmod +x $install_path/adb
+
+echo "Moving Fastboot"
 sudo cp Mac/fastboot_Mac $install_path/fastboot #Moves Fastboot
 echo "Fastboot moved to $install_path/fastboot"
+echo "Setting execute permission on fastboot"
+sudo chmod +x $install_path/fastboot
 echo "You may now run Android Debug Bridge and Fastboot commands"
 echo "Have a nice day."
