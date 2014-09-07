@@ -3,7 +3,7 @@
 #  ADB Uninstall.sh
 #  
 #  This script works on Linux and Mac OS X.
-#  This script removed adb and fastboot from usr/bin/
+#  This script removes adb and fastboot from usr/bin/
 #
 #  Created by kalaker on 4/21/12.
 echo "About to removed ADB and Fastboot"
