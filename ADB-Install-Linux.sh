@@ -23,11 +23,11 @@ echo "JDK Installed"
 echo "Changed directory to `pwd`" #Informs user of path change
 echo "Moving ADB"
 sudo cp Linux/adb_Linux $install_path/adb #Moves adb
-sudo chmod 777 $install_path/adb #Allows to be executable
+sudo chmod a+x $install_path/adb #Allows to be executable
 echo "ADB Moved to $install_path/adb"
 echo "moving Fastboot"
 sudo cp Linux/fastboot_Linux $install_path/fastboot #Moves Fastboot
-sudo chmod 777 $install_path/fastboot #Allows to be executable
+sudo chmod a+x $install_path/fastboot #Allows to be executable
 echo "Fastboot moved to $install_path/fastboot"
 echo "Installing rules"
 sudo cp Linux/51-android.rules /etc/udev/rules.d/51-android.rules #Installs rules
