@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+install_path="${HOME}/.local/bin"
+
+download_platform_tools() {
+    local install_url="https://dl.google.com/android/repository/platform-tools-latest-${os}.zip"
+    user "Downloading tools from $install_url"
+    tmpdir="$(mktemp -d "${TMPDIR:-/tmp/}adbfbootinstall.XXXXXX")"
+    # -o flag os output file; used because macOS uses -output but Linux uses
+    # --output
+    curl -o "${tmpdir}/tools.zip" "$install_url" 2> "${tmpdir}/dl-log.txt"
+}
+
+install_jdk() {
+    if [[ "$os" == "linux" ]]; then
+        sudo apt-get install openjdk-8-jdk
+    else
+        warn "JDK install requested on non-Linux platform"
+    fi
+}
+
+install_adb_fastboot_packages() {
+    if [[ "$os" == "linux" ]]; then
+        sudo apt-get install adb fastboot
+    else
+        warn "Package install requested on non-Linux platform"
+    fi
+}
+
+install_bins() {
+    mkdir --parents "$install_path"
+    if ! exists unzip; then
+        error "Unzip is required for install"
+    fi
+    unzip "${tmpdir}/tools.zip" -d "${tmpdir}" > "${tmpdir}/unzip-log.txt"
+    cp "${tmpdir}/platform-tools/adb" "${install_path}/adb"
+    cp "${tmpdir}/platform-tools/fastboot" "${install_path}/fastboot"
+}
+
+check_os() {
+    # -s is the kernel name. macOS does not support long-form argument
+    case "$(uname -s)" in
+        Linux*) os=linux;;
+        Darwin*) os=darwin;;
+        *) error "Only macOS and Linux are supported";;
+    esac
+}
+
+exists() {
+    type "$1" >/dev/null 2>&1
+}
+
+user() {
+    echo "==> ${1}"
+}
+
+warn() {
+    echo "==> ${1}"
+}
+
+error() {
+    echo -e " \e[31m!!!\e[0m ${1}"
+    exit 1
+}
+
+linux_install_path() {
+    warn "You may be asked to enter your password to install some packages"
+    install_jdk
+    install_adb_fastboot_packages
+    user "The tools have been installed globally."
+    exit
+}
+
+main() {
+    check_os
+
+    if [[ "$os" == "linux" ]] && exists apt-get; then
+        linux_install_path
+    fi
+
+    if ! download_platform_tools; then
+        error "Unable to download tools"
+    fi
+
+    if ! install_bins; then
+        error "Unable to install the binaries to $install_path"
+    fi
+
+    if [[ $PATH == *"${HOME}/.local/bin"* ]]; then
+        user "Binaries installed and should be executable by running \`adb\` or \`fastboot\`"
+    else
+        cat << EOF
+Set your \$PATH variable to the following:
+  \$HOME/.local/bin:\$PATH
+EOF
+    fi
+}
+
+main "$@"

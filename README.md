@@ -5,15 +5,18 @@ Installs the ADB and Fastboot binaries on both Linux and macOS.
 ## Installing
 
 ### Mac OS X
-On Mac OS X this script installs ADB and Fastboot to /usr/bin/ on Mac OS X.
-You can uninstall using the Uninstall ADB.sh script provided.
+
+This will install the ADB and Fastboot binaries to `$HOME/.local/bin`.
+You will be prompted to add this directory to your PATH if it is not already
+there.
 
 ### Linux
-On Linux, this will install ADB and Fastboot to /usr/bin, installs
-`51-android.rules`, and installs the Java JDK. You can uninstall using the
-`Uninstall ADB.sh` script provided.
+
+This will attempt to install the adb and fastboot packages if you are on a
+Debian-based distribution. If you are not, then this will just get the two
+binaries and place them in `$HOME/.local/bin` and you will be prompted to add
+that path to your PATH if it is not already.
 
 ## License
 
-The scripts are licensed under the GNU GPL v3. ADB, Fastboot, Java, and all
-other works retain their original licenses.
+See [LICENSE](LICENSE) for license information.
